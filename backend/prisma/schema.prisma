@@ -1,0 +1,148 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────
+
+model User {
+  id            Int      @id @default(autoincrement())
+  dni           Int      @unique
+  licenseNumber Int?     @unique
+  password      String
+  role          Role     @default(PATIENT)
+  createdAt     DateTime @default(now())
+
+  patient  Patient?
+  doctor   Doctor?
+  studies  Study[]
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+// ─────────────────────────────────────────
+// PATIENT
+// ─────────────────────────────────────────
+
+model Patient {
+  dni        Int      @id
+  name       String
+  lastname   String
+  socialWork String?
+  createdAt  DateTime @default(now())
+
+  user         User          @relation(fields: [dni], references: [dni])
+  appointments Appointment[]
+  studies      Study[]
+}
+
+// ─────────────────────────────────────────
+// SPECIALTY
+// ─────────────────────────────────────────
+
+model Specialty {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  doctors      Doctor[]
+  appointments Appointment[]
+}
+
+// ─────────────────────────────────────────
+// DOCTOR
+// ─────────────────────────────────────────
+
+model Doctor {
+  licenseNumber Int      @id
+  name          String
+  lastname      String
+  specialtyId   Int
+  createdAt     DateTime @default(now())
+
+  specialty     Specialty           @relation(fields: [specialtyId], references: [id])
+  user          User?               @relation(fields: [licenseNumber], references: [licenseNumber])
+  appointments  Appointment[]
+  availability  DoctorAvailability[]
+
+  @@index([specialtyId])
+}
+
+// ─────────────────────────────────────────
+// APPOINTMENT
+// ─────────────────────────────────────────
+
+model Appointment {
+  id            Int               @id @default(autoincrement())
+  scheduledAt   DateTime
+  status        AppointmentStatus @default(PENDING)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  patientDni    Int
+  doctorLicense Int
+  specialtyId   Int
+
+  patient   Patient   @relation(fields: [patientDni], references: [dni])
+  doctor    Doctor    @relation(fields: [doctorLicense], references: [licenseNumber])
+  specialty Specialty @relation(fields: [specialtyId], references: [id])
+
+  @@unique([doctorLicense, scheduledAt])
+  @@index([patientDni])
+  @@index([status])
+  @@index([scheduledAt])
+  @@index([specialtyId])
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  ABSENT
+}
+
+// ─────────────────────────────────────────
+// DOCTOR AVAILABILITY
+// ─────────────────────────────────────────
+
+model DoctorAvailability {
+  id            Int      @id @default(autoincrement())
+  licenseNumber Int
+  date          DateTime 
+  startTime     String   
+  endTime       String   
+  intervalMinutes Int    @default(30)
+
+  doctor Doctor @relation(fields: [licenseNumber], references: [licenseNumber])
+
+  @@unique([licenseNumber, date])
+  @@index([date])
+}
+
+// ─────────────────────────────────────────
+// STUDY
+// ─────────────────────────────────────────
+
+model Study {
+  id          Int      @id @default(autoincrement())
+  patientDni  Int
+  title       String
+  description String?
+  fileUrl     String?
+  date        DateTime
+  createdBy   Int      
+  createdAt   DateTime @default(now())
+
+  patient    Patient @relation(fields: [patientDni], references: [dni])
+  uploadedBy User    @relation(fields: [createdBy], references: [id])
+}
