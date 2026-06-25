@@ -1,0 +1,59 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { CalendarDays, CalendarPlus, FileText, Clock, Users, CalendarRange, Upload } from 'lucide-react'
+import { getUserRole } from '@/lib/auth'
+
+const patientLinks = [
+  { href: '/appointments',       label: 'Mis Turnos',  icon: CalendarDays  },
+  { href: '/appointments/new', label: 'Sacar Turno', icon: CalendarPlus  },
+  { href: '/studies',     label: 'Mis Estudios', icon: FileText      },
+]
+
+const doctorLinks = [
+  { href: '/doctor/appointments',    label: 'Turnos de Hoy', icon: Clock  },
+  { href: '/doctor/patients', label: 'Pacientes',     icon: Users  },
+]
+
+const adminLinks = [
+  { href: '/admin/availability', label: 'Disponibilidad Médicos', icon: CalendarRange },
+  { href: '/admin/studies',       label: 'Cargar Estudio',         icon: Upload        },
+]
+
+export function Sidebar() {
+  const pathname = usePathname()
+  const role = getUserRole()
+
+  const links =
+    role === 'DOCTOR' ? doctorLinks :
+    role === 'ADMIN'  ? adminLinks  :
+    patientLinks
+
+  return (
+    <aside className="fixed top-14 left-0 w-48 h-[calc(100vh-56px)] bg-white border-r border-gray-200 py-6 px-3">
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-3">
+        Menú
+      </p>
+      <nav className="flex flex-col gap-1">
+        {links.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
+                active
+                  ? 'bg-[#e6f5f3] text-[#2a9d8f] font-medium'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <Icon size={16} />
+              {label}
+            </Link>
+          )
+        })}
+      </nav>
+    </aside>
+  )
+}
