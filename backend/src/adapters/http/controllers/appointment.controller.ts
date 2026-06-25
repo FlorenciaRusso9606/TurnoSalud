@@ -5,6 +5,7 @@ import { CancelAppointmentUseCase } from '../../../application/use-cases/CancelA
 import { ChangeAppointmentStatusUseCase } from '../../../application/use-cases/ChangeAppointmentStatus'
 import { GetAvailableSlotsUseCase } from '../../../application/use-cases/GetAvailableSlots'
 import { GetMyAppointmentsUseCase } from '../../../application/use-cases/GetMyAppointments'
+import { GetDoctorAppointmentsUseCase } from '../../../application/use-cases/GetDoctorAppointments'
 import { PrismaAppointmentRepository } from '../../../infrastructure/repositories/PrismaAppointmentRepository'
 import { PrismaDoctorAvailabilityRepository } from '../../../infrastructure/repositories/PrismaDoctorAvailabilityRepository'
 
@@ -16,6 +17,7 @@ const cancelUseCase = new CancelAppointmentUseCase(appointmentRepo)
 const changeStatusUseCase = new ChangeAppointmentStatusUseCase(appointmentRepo)
 const getAvailableUseCase = new GetAvailableSlotsUseCase(availabilityRepo, appointmentRepo)
 const getMyAppointmentsUseCase = new GetMyAppointmentsUseCase(appointmentRepo)
+const getDoctorAppointmentsUseCase = new GetDoctorAppointmentsUseCase(appointmentRepo)
 
 // GET /appointments/available?specialtyId=1&date=2026-07-01
 export const getAvailableSlots = async (req: Request, res: Response) => {
@@ -31,6 +33,31 @@ export const getAvailableSlots = async (req: Request, res: Response) => {
       date: new Date(parsed.data.date)
     })
     res.json(slots)
+  } catch (err: any) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+// GET /appointments/doctor?range=today|week|month
+export const getDoctorAppointments = async (req: Request, res: Response) => {
+  const licenseNumber = req.user!.licenseNumber
+  if (!licenseNumber) {
+    res.status(400).json({ error: 'El usuario no tiene matrícula asignada' })
+    return
+  }
+
+  const range = req.query.range as string
+  if (!['today', 'week', 'month'].includes(range)) {
+    res.status(422).json({ error: 'range debe ser today, week o month' })
+    return
+  }
+
+  try {
+    const appointments = await getDoctorAppointmentsUseCase.execute({
+      licenseNumber,
+      range: range as 'today' | 'week' | 'month',
+    })
+    res.json(appointments)
   } catch (err: any) {
     res.status(500).json({ error: err.message })
   }

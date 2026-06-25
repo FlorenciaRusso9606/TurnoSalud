@@ -1,10 +1,13 @@
 export interface Study {
-  id: number
+  id: string
   patientDni: number
+  studyTypeId: number
   title: string
   description: string | null
-  fileUrl: string | null
-  date: Date
+  institution: string
+  fileUrl: string
+  performedAt: Date
+  responsibleDoctorLicense: number
   createdBy: number
   createdAt: Date
 }

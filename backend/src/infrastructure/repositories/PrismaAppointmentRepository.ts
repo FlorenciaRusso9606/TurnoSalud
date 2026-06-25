@@ -21,6 +21,16 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
     })
   }
 
+  async findByDoctor(licenseNumber: number, from: Date, to: Date): Promise<Appointment[]> {
+    return prisma.appointment.findMany({
+      where: {
+        doctorLicense: licenseNumber,
+        scheduledAt: { gte: from, lte: to },
+      },
+      orderBy: { scheduledAt: 'asc' },
+    })
+  }
+
   async findByPatient(patientDni: number): Promise<Appointment[]> {
     return prisma.appointment.findMany({
       where: { patientDni },

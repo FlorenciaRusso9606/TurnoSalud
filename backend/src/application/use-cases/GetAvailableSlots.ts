@@ -10,6 +10,7 @@ interface AvailableSlot {
   doctorLicense: number
   doctorName: string
   scheduledAt: Date
+  booked: boolean
 }
 
 function generateSlots(date: Date, startTime: string, endTime: string, intervalMinutes: number): Date[] {
@@ -67,11 +68,12 @@ export class GetAvailableSlotsUseCase {
           .map(a => a.scheduledAt.getTime())
       )
 
-      for (const slot of slots.filter(s => !bookedSlots.has(s.getTime()))) {
+      for (const slot of slots) {
         result.push({
           doctorLicense: availability.licenseNumber,
           doctorName: `Doctor ${availability.licenseNumber}`, // enriched in controller
           scheduledAt: slot,
+          booked: bookedSlots.has(slot.getTime()),
         })
       }
     }

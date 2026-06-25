@@ -2,10 +2,10 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ─────────────────────────────────────────
@@ -13,16 +13,17 @@ datasource db {
 // ─────────────────────────────────────────
 
 model User {
-  id            Int      @id @default(autoincrement())
-  dni           Int      @unique
-  licenseNumber Int?     @unique
-  password      String
-  role          Role     @default(PATIENT)
-  createdAt     DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  dni       Int      @unique
+  name      String
+  lastname  String
+  password  String
+  role      Role     @default(PATIENT)
+  createdAt DateTime @default(now())
 
-  patient  Patient?
-  doctor   Doctor?
-  studies  Study[]
+  patient Patient?
+  doctor  Doctor?
+  studies Study[]
 }
 
 enum Role {
@@ -37,8 +38,7 @@ enum Role {
 
 model Patient {
   dni        Int      @id
-  name       String
-  lastname   String
+  birthDate  DateTime
   socialWork String?
   createdAt  DateTime @default(now())
 
@@ -65,15 +65,15 @@ model Specialty {
 
 model Doctor {
   licenseNumber Int      @id
-  name          String
-  lastname      String
+  userId        Int      @unique
   specialtyId   Int
   createdAt     DateTime @default(now())
 
-  specialty     Specialty           @relation(fields: [specialtyId], references: [id])
-  user          User?               @relation(fields: [licenseNumber], references: [licenseNumber])
-  appointments  Appointment[]
-  availability  DoctorAvailability[]
+  specialty           Specialty            @relation(fields: [specialtyId], references: [id])
+  user                User                 @relation(fields: [userId], references: [id])
+  appointments        Appointment[]
+  availability        DoctorAvailability[]
+  responsibleStudies  Study[]
 
   @@index([specialtyId])
 }
@@ -130,19 +130,34 @@ model DoctorAvailability {
 }
 
 // ─────────────────────────────────────────
+// STUDY TYPE
+// ─────────────────────────────────────────
+
+model StudyType {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  studies Study[]
+}
+
+// ─────────────────────────────────────────
 // STUDY
 // ─────────────────────────────────────────
 
 model Study {
-  id          Int      @id @default(autoincrement())
-  patientDni  Int
-  title       String
-  description String?
-  fileUrl     String?
-  date        DateTime
-  createdBy   Int      
-  createdAt   DateTime @default(now())
+  id                       String   @id @default(uuid())
+  patientDni               Int
+  studyTypeId              Int
+  title                    String
+  description              String?
+  institution              String
+  fileUrl                  String
+  performedAt              DateTime
+  responsibleDoctorLicense Int
+  createdBy                Int
+  createdAt                DateTime @default(now())
 
-  patient    Patient @relation(fields: [patientDni], references: [dni])
-  uploadedBy User    @relation(fields: [createdBy], references: [id])
+  patient           Patient   @relation(fields: [patientDni], references: [dni])
+  studyType         StudyType @relation(fields: [studyTypeId], references: [id])
+  responsibleDoctor Doctor    @relation(fields: [responsibleDoctorLicense], references: [licenseNumber])
+  uploadedBy        User      @relation(fields: [createdBy], references: [id])
 }

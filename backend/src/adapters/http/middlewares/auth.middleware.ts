@@ -4,6 +4,9 @@ import jwt from 'jsonwebtoken'
 export interface AuthPayload {
   userId: number
   dni: number
+  licenseNumber?: number | null
+  name: string
+  lastname: string
   role: 'PATIENT' | 'DOCTOR' | 'ADMIN'
 }
 

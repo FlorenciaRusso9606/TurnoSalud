@@ -7,6 +7,7 @@ interface RegisterInput {
   password: string
   name: string
   lastname: string
+  birthDate: string
   socialWork?: string
 }
 
@@ -25,19 +26,26 @@ export class RegisterPatientUseCase {
 
     const hashedPassword = await bcrypt.hash(input.password, 10)
 
-    const user = await this.userRepository.create({
-      dni: input.dni,
-      password: hashedPassword,
-      role: 'PATIENT',
-    })
+    const user = await prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: {
+          dni: input.dni,
+          name: input.name,
+          lastname: input.lastname,
+          password: hashedPassword,
+          role: 'PATIENT',
+        },
+      })
 
-    await prisma.patient.create({
-      data: {
-        dni: input.dni,
-        name: input.name,
-        lastname: input.lastname,
-        socialWork: input.socialWork,
-      },
+      await tx.patient.create({
+        data: {
+          dni: input.dni,
+          birthDate: new Date(input.birthDate),
+          socialWork: input.socialWork,
+        },
+      })
+
+      return newUser
     })
 
     return { id: user.id, dni: user.dni, role: user.role }

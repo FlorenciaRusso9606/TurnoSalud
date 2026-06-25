@@ -26,6 +26,8 @@ const makeAppointmentRepo = (appointments: Appointment[] = []): IAppointmentRepo
 const sameDay = a.scheduledAt.toLocaleDateString() === date.toLocaleDateString()
       return sameDoctor && sameDay
     }),
+  findByDoctor: async (license, from, to) =>
+    appointments.filter(a => a.doctorLicense === license && a.scheduledAt >= from && a.scheduledAt <= to),
   findByPatient: async (dni) => appointments.filter(a => a.patientDni === dni),
   create: async (data) => ({
     id: appointments.length + 1,
@@ -57,9 +59,8 @@ const makeAvailabilityRepo = (availabilities: DoctorAvailability[] = []): IDocto
 const makeStudyRepo = (studies: Study[] = []): IStudyRepository => ({
   findByPatient: async (dni) => studies.filter(s => s.patientDni === dni),
   create: async (data) => ({
-    id: studies.length + 1,
+    id: `study-${studies.length + 1}`,
     description: null,
-    fileUrl: null,
     createdAt: new Date(),
     ...data,
   }),
@@ -238,10 +239,13 @@ describe('GetAvailableSlotsUseCase', () => {
 
     const slots = await useCase.execute({ specialtyId: 1, date })
 
-    // 08:00-12:00 cada 30min = 8 slots, menos 1 ocupado = 7
-    expect(slots.length).toBe(7)
-    const times = slots.map(s => s.scheduledAt.getHours() * 60 + s.scheduledAt.getMinutes())
-    expect(times).not.toContain(8 * 60) // 08:00 no debe estar
+    // 08:00-12:00 cada 30min = 8 slots totales, 1 ocupado y 7 libres
+    expect(slots.length).toBe(8)
+    const occupied = slots.filter(s => s.booked)
+    const free     = slots.filter(s => !s.booked)
+    expect(occupied).toHaveLength(1)
+    expect(free).toHaveLength(7)
+    expect(occupied[0].scheduledAt.getHours() * 60 + occupied[0].scheduledAt.getMinutes()).toBe(8 * 60)
   })
 
   it('devuelve array vacío si no hay disponibilidad', async () => {
@@ -289,8 +293,8 @@ describe('GetMyAppointmentsUseCase', () => {
 describe('GetPatientStudiesUseCase', () => {
   it('devuelve los estudios del paciente ordenados', async () => {
     const studies: Study[] = [
-      { id: 1, patientDni: 12345678, title: 'Hemograma', description: null, fileUrl: null, date: new Date('2026-06-01'), createdBy: 1, createdAt: new Date() },
-      { id: 2, patientDni: 12345678, title: 'Rx Tórax', description: null, fileUrl: null, date: new Date('2026-05-01'), createdBy: 1, createdAt: new Date() },
+      { id: 'uuid-1', patientDni: 12345678, studyTypeId: 1, title: 'Hemograma', description: null, institution: 'Lab Central', fileUrl: 'https://s3.example.com/1.pdf', performedAt: new Date('2026-06-01'), responsibleDoctorLicense: 9999, createdBy: 1, createdAt: new Date() },
+      { id: 'uuid-2', patientDni: 12345678, studyTypeId: 4, title: 'Rx Tórax', description: null, institution: 'Clínica Norte', fileUrl: 'https://s3.example.com/2.pdf', performedAt: new Date('2026-05-01'), responsibleDoctorLicense: 9999, createdBy: 1, createdAt: new Date() },
     ]
     const repo = makeStudyRepo(studies)
     const useCase = new GetPatientStudiesUseCase(repo)
@@ -312,10 +316,13 @@ describe('UploadStudyUseCase', () => {
 
     const result = await useCase.execute({
       patientDni: 12345678,
+      studyTypeId: 1,
       title: 'Hemograma',
       description: 'Resultado normal',
+      institution: 'Lab Central',
       fileUrl: 'https://s3.amazonaws.com/turnosalud/hemograma.pdf',
-      date: new Date('2026-06-23'),
+      performedAt: new Date('2026-06-23'),
+      responsibleDoctorLicense: 9999,
       uploadedByUserId: 1,
     })
 

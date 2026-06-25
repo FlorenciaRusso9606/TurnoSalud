@@ -1,14 +1,15 @@
 import { z } from 'zod'
 
 export const uploadSchema = z.object({
-  patientDni: z.number().int().positive().min(7),
-  title: z.string().min(1),
-  description: z.string().optional(),
-  fileUrl: z.string().url().optional(),
-  date: z.coerce.date(),
+  patientDni:               z.coerce.number().int().positive('DNI inválido'),
+  studyTypeId:              z.coerce.number().int().positive('Tipo de estudio requerido'),
+  title:                    z.string().min(1, 'El título es requerido'),
+  description:              z.string().optional(),
+  institution:              z.string().min(1, 'La institución es requerida'),
+  performedAt:              z.coerce.date(),
+  responsibleDoctorLicense: z.coerce.number().int().positive('Profesional responsable requerido'),
 })
 
-// z.coerce.number() converts the string from req.params to number
 export const patientDniParamSchema = z.object({
   dni: z.coerce.number().int().positive(),
 })

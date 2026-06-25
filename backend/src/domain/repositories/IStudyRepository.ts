@@ -4,10 +4,13 @@ export interface IStudyRepository {
   findByPatient(patientDni: number): Promise<Study[]>
   create(data: {
     patientDni: number
+    studyTypeId: number
     title: string
     description?: string
-    fileUrl?: string
-    date: Date
+    institution: string
+    fileUrl: string
+    performedAt: Date
+    responsibleDoctorLicense: number
     createdBy: number
   }): Promise<Study>
 }

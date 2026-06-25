@@ -1,14 +1,17 @@
 import { Request, Response } from 'express'
+
+type UploadRequest = Request & {
+  file?: { buffer: Buffer; originalname: string; mimetype: string; size: number }
+}
 import { uploadSchema, patientDniParamSchema } from '../schemas/study.schemas'
 import { GetPatientStudiesUseCase } from '../../../application/use-cases/GetPatientStudies'
 import { UploadStudyUseCase } from '../../../application/use-cases/UploadStudy'
 import { PrismaStudyRepository } from '../../../infrastructure/repositories/PrismaStudyRepository'
+import { uploadFileToS3 } from '../../../lib/s3'
 
 const studyRepository = new PrismaStudyRepository()
 const getPatientStudiesUseCase = new GetPatientStudiesUseCase(studyRepository)
 const uploadStudyUseCase = new UploadStudyUseCase(studyRepository)
-
-
 
 export const getMyStudies = async (req: Request, res: Response) => {
   try {
@@ -34,16 +37,35 @@ export const getPatientStudies = async (req: Request, res: Response) => {
   }
 }
 
-export const uploadStudy = async (req: Request, res: Response) => {
-  const parsed = uploadSchema.safeParse(req.body)
-  if (!parsed.success) {
-    res.status(422).json({ error: parsed.error.flatten() })
+export const uploadStudy = async (req: UploadRequest, res: Response) => {
+  if (!req.file) {
+    res.status(422).json({ error: 'El archivo PDF es requerido' })
     return
   }
 
+  const parsed = uploadSchema.safeParse(req.body)
+  if (!parsed.success) {
+    res.status(422).json({ error: parsed.error.issues[0].message })
+    return
+  }
+
+  // For DOCTOR role, override responsibleDoctorLicense with their own from JWT
+  const responsibleDoctorLicense =
+    req.user!.role === 'DOCTOR'
+      ? req.user!.licenseNumber!
+      : parsed.data.responsibleDoctorLicense
+
   try {
+    const fileUrl = await uploadFileToS3(
+      req.file.buffer,
+      req.file.originalname,
+      req.file.mimetype
+    )
+
     const study = await uploadStudyUseCase.execute({
       ...parsed.data,
+      responsibleDoctorLicense,
+      fileUrl,
       uploadedByUserId: req.user!.userId,
     })
     res.status(201).json(study)
