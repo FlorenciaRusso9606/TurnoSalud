@@ -8,6 +8,11 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { formatShortDate } from '@/lib/dateUtils'
 
+async function openStudy(studyId: string) {
+  const { url } = await api.studies.getDownloadUrl(studyId)
+  window.open(url, '_blank')
+}
+
 export default function MisEstudiosPage() {
   const [studies, setStudies] = useState<Study[]>([])
   const [loading, setLoading] = useState(true)
@@ -41,20 +46,17 @@ export default function MisEstudiosPage() {
 
             <div className="flex-1">
               <p className="font-semibold text-[#1d3557]">{study.title}</p>
-              <p className="text-sm text-gray-400">{formatShortDate(study.date)}</p>
+              <p className="text-sm text-gray-400">{formatShortDate(study.performedAt)}</p>
             </div>
 
-            {study.fileUrl && (
-              <a
-                href={study.fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm border border-gray-200 hover:border-[#2a9d8f] hover:text-[#2a9d8f] px-4 py-1.5 rounded-lg transition-colors"
-              >
-                <Download size={14} />
-                Descargar
-              </a>
-            )}
+            <button
+              type="button"
+              onClick={() => openStudy(study.id)}
+              className="flex items-center gap-1.5 text-sm border border-gray-200 hover:border-[#2a9d8f] hover:text-[#2a9d8f] px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
+            >
+              <Download size={14} />
+              Descargar
+            </button>
           </div>
         ))}
       </div>

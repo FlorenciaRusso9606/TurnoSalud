@@ -80,8 +80,12 @@ export default function MisTurnosPage() {
               </div>
 
               <div className="flex-1">
-                <p className="font-semibold text-[#1d3557]">Especialidad #{appointment.specialtyId}</p>
-                <p className="text-sm text-gray-500">Dr. {appointment.doctorLicense} · {time}</p>
+                <p className="font-semibold text-[#1d3557]">
+                  {appointment.specialtyName ?? `Especialidad #${appointment.specialtyId}`}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {appointment.doctorName ? `Dr. ${appointment.doctorName}` : `Dr. ${appointment.doctorLicense}`} · {time}
+                </p>
               </div>
 
               <div className="flex items-center gap-3">

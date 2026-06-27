@@ -78,6 +78,7 @@ export default function NuevoTurnoPage() {
         scheduledAt: selectedSlot.scheduledAt,
       })
       router.push('/appointments')
+      router.refresh()
     } catch (e: any) {
       setError(e.message)
     } finally {
