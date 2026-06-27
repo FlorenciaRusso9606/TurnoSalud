@@ -6,6 +6,11 @@ import { api } from '@/lib/api'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Study } from '@/types'
 
+async function openStudy(studyId: string) {
+  const { url } = await api.studies.getDownloadUrl(studyId)
+  window.open(url, '_blank')
+}
+
 export default function PatientStudiesPage() {
   const params = useParams()
   const dni = Number(params.dni)
@@ -59,19 +64,16 @@ export default function PatientStudiesPage() {
               {study.description && (
                 <p className="text-xs text-gray-400 mt-0.5">{study.description}</p>
               )}
-              <p className="text-sm text-gray-400">{formatDate(study.date)}</p>
+              <p className="text-sm text-gray-400">{formatDate(study.performedAt)}</p>
             </div>
 
-            {study.fileUrl && (
-              <a
-                href={study.fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm border border-gray-200 hover:border-[#2a9d8f] hover:text-[#2a9d8f] px-4 py-1.5 rounded-lg transition-colors"
-              >
-                Descargar
-              </a>
-            )}
+            <button
+              type="button"
+              onClick={() => openStudy(study.id)}
+              className="text-sm border border-gray-200 hover:border-[#2a9d8f] hover:text-[#2a9d8f] px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
+            >
+              Descargar
+            </button>
           </div>
         ))}
       </div>

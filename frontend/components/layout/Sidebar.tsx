@@ -2,23 +2,30 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CalendarDays, CalendarPlus, FileText, Clock, Users, CalendarRange, Upload } from 'lucide-react'
+import {
+  CalendarDays, CalendarPlus, FileText, Clock, Users, CalendarRange,
+  Upload, Stethoscope, BookOpen, UserCog,
+} from 'lucide-react'
 import { getUserRole } from '@/lib/auth'
 
 const patientLinks = [
-  { href: '/appointments',       label: 'Mis Turnos',  icon: CalendarDays  },
-  { href: '/appointments/new', label: 'Sacar Turno', icon: CalendarPlus  },
-  { href: '/studies',     label: 'Mis Estudios', icon: FileText      },
+  { href: '/appointments',     label: 'Mis Turnos',   icon: CalendarDays },
+  { href: '/appointments/new', label: 'Sacar Turno',  icon: CalendarPlus },
+  { href: '/studies',          label: 'Mis Estudios', icon: FileText     },
 ]
 
 const doctorLinks = [
-  { href: '/doctor/appointments',    label: 'Turnos de Hoy', icon: Clock  },
-  { href: '/doctor/patients', label: 'Pacientes',     icon: Users  },
+  { href: '/doctor/appointments', label: 'Turnos de Hoy', icon: Clock  },
+  { href: '/doctor/patients',     label: 'Pacientes',     icon: Users  },
 ]
 
 const adminLinks = [
-  { href: '/admin/availability', label: 'Disponibilidad Médicos', icon: CalendarRange },
-  { href: '/admin/studies',       label: 'Cargar Estudio',         icon: Upload        },
+  { href: '/admin/patients',     label: 'Pacientes',      icon: Users        },
+  { href: '/admin/doctors',      label: 'Médicos',        icon: Stethoscope  },
+  { href: '/admin/specialties',  label: 'Especialidades', icon: BookOpen     },
+  { href: '/admin/users',        label: 'Usuarios',       icon: UserCog      },
+  { href: '/admin/availability', label: 'Disponibilidad', icon: CalendarRange},
+  { href: '/admin/studies',      label: 'Cargar Estudio', icon: Upload       },
 ]
 
 export function Sidebar() {
@@ -37,7 +44,7 @@ export function Sidebar() {
       </p>
       <nav className="flex flex-col gap-1">
         {links.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href
+          const active = pathname === href || (href !== '/' && pathname.startsWith(href))
           return (
             <Link
               key={href}
