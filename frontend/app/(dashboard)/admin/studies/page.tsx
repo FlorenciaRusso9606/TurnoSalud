@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -125,7 +125,6 @@ export default function AdminEstudiosPage() {
       <form onSubmit={handleSubmit}>
         <div className="flex gap-6 items-start">
 
-          {/* ── Columna izquierda: Paciente ── */}
           <div className="w-72 shrink-0">
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">Paciente</p>
@@ -133,7 +132,6 @@ export default function AdminEstudiosPage() {
             </div>
           </div>
 
-          {/* ── Columna derecha: Datos del estudio ── */}
           <div className="flex-1 min-w-0">
             <div className={[
               'bg-white rounded-2xl border p-5 transition-opacity',

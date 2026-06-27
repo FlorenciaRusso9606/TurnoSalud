@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Clock, CalendarDays, Trash2, Pencil, Plus } from 'lucide-react'
@@ -107,7 +107,6 @@ export function DoctorCard({ doctor, availability, loading, onRefresh }: Props) 
           <div className="flex-1 min-w-0 flex flex-col" style={{ minHeight: 300 }}>
 
             {mode !== 'view' ? (
-              /* ── Form (add / edit) ── */
               <div>
                 <div className="flex items-center justify-between mb-5">
                   <p className="font-semibold text-gray-800">
@@ -136,7 +135,6 @@ export function DoctorCard({ doctor, availability, loading, onRefresh }: Props) 
               </div>
 
             ) : !selectedDate ? (
-              /* ── No date selected ── */
               <div className="flex flex-col flex-1">
                 <div className="flex-1 flex flex-col items-center justify-center text-center py-10">
                   <CalendarDays size={36} className="text-gray-200 mb-3" />
@@ -156,7 +154,6 @@ export function DoctorCard({ doctor, availability, loading, onRefresh }: Props) 
               </div>
 
             ) : selectedAv ? (
-              /* ── Date selected + has availability ── */
               <div className="flex flex-col flex-1">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
                   {formatDateLabel(selectedDate)}
@@ -202,7 +199,6 @@ export function DoctorCard({ doctor, availability, loading, onRefresh }: Props) 
               </div>
 
             ) : (
-              /* ── Date selected + no availability ── */
               <div className="flex flex-col flex-1">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
                   {formatDateLabel(selectedDate)}

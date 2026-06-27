@@ -1,7 +1,7 @@
-import { getToken, removeToken } from './auth'
+﻿import { getToken, removeToken } from './auth'
 import {
   Appointment, AvailableSlot, Study, StudyType, Doctor, DoctorDetail, DoctorAdmin,
-  Patient, PatientRecord, Specialty, UserAdmin, MedicalNote,
+  Patient, PatientRecord, Specialty, UserAdmin, MedicalNote, DashboardStats,
 } from '@/types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
@@ -43,8 +43,6 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return data
 }
 
-// ─── Auth ───────────────────────────────────────────────────────────────────
-
 export const api = {
   auth: {
     login: (body: { dni: number; password: string }) =>
@@ -65,8 +63,6 @@ export const api = {
         body: JSON.stringify(body),
       }),
   },
-
-  // ─── Appointments ──────────────────────────────────────────────────────────
 
   appointments: {
     getAvailable: (specialtyId: number, date: string) =>
@@ -95,8 +91,6 @@ export const api = {
       request<Appointment[]>(`/appointments/patient/${dni}`),
   },
 
-  // ─── Studies ───────────────────────────────────────────────────────────────
-
   studies: {
     getMine: () => request<Study[]>('/studies/mine'),
 
@@ -118,13 +112,9 @@ export const api = {
     },
   },
 
-  // ─── Study types ───────────────────────────────────────────────────────────
-
   studyTypes: {
     getAll: () => request<StudyType[]>('/study-types'),
   },
-
-  // ─── Specialties ───────────────────────────────────────────────────────────
 
   specialties: {
     getAll: () => request<Specialty[]>('/specialties'),
@@ -138,8 +128,6 @@ export const api = {
     delete: (id: number) =>
       request<void>(`/specialties/${id}`, { method: 'DELETE' }),
   },
-
-  // ─── Doctors ───────────────────────────────────────────────────────────────
 
   doctors: {
     getBySpecialty: (specialtyId: number) =>
@@ -164,8 +152,6 @@ export const api = {
       request(`/doctors/${licenseNumber}`, { method: 'PATCH', body: JSON.stringify(body) }),
   },
 
-  // ─── Patients ──────────────────────────────────────────────────────────────
-
   patients: {
     getAll:    () => request<Patient[]>('/patients'),
     search:    (q: string) => request<Patient[]>(`/patients/search?q=${encodeURIComponent(q)}`),
@@ -184,14 +170,10 @@ export const api = {
     }) => request(`/patients/${dni}`, { method: 'PATCH', body: JSON.stringify(body) }),
   },
 
-  // ─── Medical Notes ─────────────────────────────────────────────────────────
-
   medicalNotes: {
     create: (body: { patientDni: number; content: string }) =>
       request<MedicalNote>('/medical-notes', { method: 'POST', body: JSON.stringify(body) }),
   },
-
-  // ─── Users (admin) ─────────────────────────────────────────────────────────
 
   users: {
     getAll: () => request<UserAdmin[]>('/users'),
@@ -201,8 +183,6 @@ export const api = {
       address?: string | null; password?: string
     }) => request<UserAdmin>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   },
-
-  // ─── Availability ──────────────────────────────────────────────────────────
 
   availability: {
     getByDoctor: (licenseNumber: number) =>
@@ -220,5 +200,10 @@ export const api = {
       request(`/availability/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
 
     delete: (id: number) => request(`/availability/${id}`, { method: 'DELETE' }),
+  },
+
+  dashboard: {
+    getStats: (range: 'today' | 'week' | 'month') =>
+      request<DashboardStats>(`/dashboard?range=${range}`),
   },
 }

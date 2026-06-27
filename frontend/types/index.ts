@@ -138,6 +138,44 @@ export interface DoctorAdmin {
   phone: string | null
 }
 
+export interface SpecialtyStat {
+  specialtyId: number
+  specialtyName: string
+  total: number
+  confirmed: number
+  pending: number
+  cancelled: number
+  absent: number
+}
+
+export interface DoctorStat {
+  licenseNumber: number
+  doctorName: string
+  specialtyName: string
+  total: number
+  confirmed: number
+  pending: number
+  cancelled: number
+  absent: number
+  absenteeismRate: number
+}
+
+export interface DashboardStats {
+  range: 'today' | 'week' | 'month'
+  from: string
+  to: string
+  kpis: {
+    total: number
+    confirmed: number
+    pending: number
+    cancelled: number
+    absent: number
+    absenteeismRate: number
+  }
+  bySpecialty: SpecialtyStat[]
+  byDoctor: DoctorStat[]
+}
+
 export interface DoctorAvailability {
   id: number
   licenseNumber: number

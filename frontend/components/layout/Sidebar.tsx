@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   CalendarDays, CalendarPlus, FileText, Clock, Users, CalendarRange,
-  Upload, Stethoscope, BookOpen, UserCog,
+  Upload, Stethoscope, BookOpen, UserCog, LayoutDashboard,
 } from 'lucide-react'
 import { getUserRole } from '@/lib/auth'
 
@@ -20,12 +20,13 @@ const doctorLinks = [
 ]
 
 const adminLinks = [
-  { href: '/admin/patients',     label: 'Pacientes',      icon: Users        },
-  { href: '/admin/doctors',      label: 'Médicos',        icon: Stethoscope  },
-  { href: '/admin/specialties',  label: 'Especialidades', icon: BookOpen     },
-  { href: '/admin/users',        label: 'Usuarios',       icon: UserCog      },
-  { href: '/admin/availability', label: 'Disponibilidad', icon: CalendarRange},
-  { href: '/admin/studies',      label: 'Cargar Estudio', icon: Upload       },
+  { href: '/admin/dashboard',    label: 'Dashboard',      icon: LayoutDashboard },
+  { href: '/admin/patients',     label: 'Pacientes',      icon: Users           },
+  { href: '/admin/doctors',      label: 'Médicos',        icon: Stethoscope     },
+  { href: '/admin/specialties',  label: 'Especialidades', icon: BookOpen        },
+  { href: '/admin/users',        label: 'Usuarios',       icon: UserCog         },
+  { href: '/admin/availability', label: 'Disponibilidad', icon: CalendarRange   },
+  { href: '/admin/studies',      label: 'Cargar Estudio', icon: Upload          },
 ]
 
 export function Sidebar() {

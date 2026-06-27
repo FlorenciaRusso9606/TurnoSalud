@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -107,7 +107,6 @@ export default function PatientRecordPage() {
         Volver
       </Button>
 
-      {/* ── 1. Encabezado del paciente ── */}
       <div className="bg-white rounded-2xl border border-gray-100 px-6 py-5 mb-4">
         <div className="flex items-start gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#2a9d8f] text-white text-lg font-bold">
@@ -145,7 +144,6 @@ export default function PatientRecordPage() {
         </div>
       </div>
 
-      {/* ── 2. Resumen clínico ── */}
       <div className="bg-white rounded-2xl border border-gray-100 mb-4">
         <div className="flex items-center gap-2 px-6 py-3.5 border-b border-gray-50">
           <ClipboardList size={15} className="text-[#2a9d8f]" />
@@ -192,7 +190,6 @@ export default function PatientRecordPage() {
         </div>
       </div>
 
-      {/* ── 3. Notas médicas ── */}
       <div className="bg-white rounded-2xl border border-gray-100 mb-4">
         <div className="flex items-center justify-between px-6 py-3.5 border-b border-gray-50">
           <div className="flex items-center gap-2">
@@ -251,7 +248,6 @@ export default function PatientRecordPage() {
         )}
       </div>
 
-      {/* ── 4. Estudios recientes ── */}
       <div className="bg-white rounded-2xl border border-gray-100 mb-4">
         <div className="flex items-center gap-2 px-6 py-3.5 border-b border-gray-50">
           <FileText size={15} className="text-[#2a9d8f]" />
@@ -295,7 +291,6 @@ export default function PatientRecordPage() {
         )}
       </div>
 
-      {/* ── 5. Próximo turno ── */}
       <div className="bg-white rounded-2xl border border-gray-100 mb-4">
         <div className="flex items-center gap-2 px-6 py-3.5 border-b border-gray-50">
           <span className="text-[#2a9d8f]">
@@ -327,7 +322,6 @@ export default function PatientRecordPage() {
         )}
       </div>
 
-      {/* ── 6. Historial de turnos ── */}
       {history.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100">
           <div className="flex items-center gap-2 px-6 py-3.5 border-b border-gray-50">

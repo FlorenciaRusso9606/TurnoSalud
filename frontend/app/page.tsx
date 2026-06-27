@@ -1,11 +1,9 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import {
   Plus, Calendar, Stethoscope, FileText, Syringe,
   Droplets, Baby, HeartHandshake, Phone, MapPin, Mail,
   ShieldAlert, Clock,
 } from 'lucide-react'
-
-// ─── Servicios del sistema ────────────────────────────────────────────────────
 
 const services = [
   {
@@ -27,8 +25,6 @@ const services = [
     href: '/login',
   },
 ]
-
-// ─── Programas y campañas ─────────────────────────────────────────────────────
 
 const campaigns = [
   {
@@ -69,13 +65,10 @@ const campaigns = [
   },
 ]
 
-// ─── Componente ───────────────────────────────────────────────────────────────
-
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
 
-      {/* ── Navbar ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -105,7 +98,6 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* ── Hero ── */}
       <section
         className="relative flex items-center justify-center bg-cover bg-center pt-16"
         style={{
@@ -156,7 +148,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Servicios ── */}
       <section className="bg-[#f8fafc] py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-[#1d3557] mb-2 text-center">Servicios del hospital</h2>
@@ -183,7 +174,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Campañas ── */}
       <section id="campanas" className="bg-white py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-[#1d3557] mb-2 text-center">Programas y campañas de salud</h2>
@@ -213,7 +203,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Mapa + Contacto ── */}
       <section id="contacto" className="bg-[#f8fafc] py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-[#1d3557] mb-10 text-center">Dónde encontrarnos</h2>
@@ -283,7 +272,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
       <footer className="bg-[#1d3557] text-white py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
