@@ -7,6 +7,7 @@ import { api } from '@/lib/api'
 import { registerSchema } from '@/lib/schemas'
 import { AuthCard } from '@/components/ui/AuthCard'
 import { FormInput } from '@/components/ui/FormInput'
+import { Button } from '@/components/ui/Button'
 import { Alert } from '@/components/ui/Alert'
 
 export default function RegisterPage() {
@@ -79,19 +80,20 @@ export default function RegisterPage() {
 
         {globalError && <Alert>{globalError}</Alert>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-[#2a9d8f] hover:bg-[#238a7e] text-white py-2.5 rounded-lg font-medium transition-colors disabled:opacity-60"
-        >
-          {loading ? 'Registrando...' : 'Crear cuenta'}
-        </button>
+        <Button type="submit" loading={loading} loadingText="Registrando..." className="w-full py-2.5">
+          Crear cuenta
+        </Button>
       </form>
 
       <p className="text-center text-sm text-gray-500 mt-4">
         ¿Ya tenés cuenta?{' '}
         <Link href="/login" className="text-[#2a9d8f] font-medium hover:underline">
           Iniciá sesión
+        </Link>
+      </p>
+      <p className="text-center text-sm text-gray-500 mt-2">
+        <Link href="/" className="text-[#2a9d8f] font-medium hover:underline">
+          ← Volver al inicio
         </Link>
       </p>
     </AuthCard>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import { saveToken } from '@/lib/auth'
@@ -9,15 +9,8 @@ import { loginSchema } from '@/lib/schemas'
 import { Role } from '@/types'
 import { AuthCard } from '@/components/ui/AuthCard'
 import { FormInput } from '@/components/ui/FormInput'
+import { Button } from '@/components/ui/Button'
 import { Alert } from '@/components/ui/Alert'
-
-type Tab = 'Paciente' | 'Médico' | 'Admin'
-
-const roleMap: Record<Tab, Role> = {
-  'Paciente': 'PATIENT',
-  'Médico':   'DOCTOR',
-  'Admin':    'ADMIN',
-}
 
 const redirectMap: Record<Role, string> = {
   PATIENT: '/appointments',
@@ -26,7 +19,10 @@ const redirectMap: Record<Role, string> = {
 }
 
 export default function LoginPage() {
-  const router = useRouter()
+  const router       = useRouter()
+  const searchParams = useSearchParams()
+  const expired      = searchParams.get('expired') === '1'
+
   const [form, setForm] = useState({ dni: '', password: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [globalError, setGlobalError] = useState('')
@@ -37,7 +33,7 @@ export default function LoginPage() {
     setErrors(prev => ({ ...prev, [e.target.name]: '' }))
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault()
     setErrors({})
     setGlobalError('')
@@ -56,7 +52,6 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const res = await api.auth.login(result.data)
-
       saveToken(res.token)
       router.push(redirectMap[res.role as Role])
     } catch (err: any) {
@@ -67,8 +62,12 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthCard title="Iniciar sesión" subtitle="Ingresá con tu DNI y contraseña" cardClassName="h-[31rem]">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <AuthCard title="Iniciar sesión" subtitle="Ingresá con tu DNI y contraseña" cardClassName="h-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {expired && (
+          <Alert>Tu sesión caducó. Iniciá sesión nuevamente.</Alert>
+        )}
+
         {[
           { name: 'dni',      label: 'DNI',        placeholder: '38123456', type: 'number'   },
           { name: 'password', label: 'Contraseña', placeholder: '••••••••', type: 'password', showToggle: true },
@@ -86,23 +85,22 @@ export default function LoginPage() {
 
         {globalError && <Alert>{globalError}</Alert>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-[#2a9d8f] hover:bg-[#238a7e] text-white py-2.5 rounded-lg font-medium transition-colors disabled:opacity-60 cursor-pointer"
-        >
-          {loading ? 'Ingresando...' : 'Iniciar sesión'}
-        </button>
+        <Button type="submit" loading={loading} loadingText="Ingresando..." className="w-full py-2.5">
+          Iniciar sesión
+        </Button>
       </form>
 
-      
-        <p className="text-center text-sm text-gray-500 mt-4">
-          ¿No tenés cuenta?{' '}
-          <Link href="/register" className="text-[#2a9d8f] font-medium hover:underline">
-            Registrate
-          </Link>
-        </p>
-    
+      <p className="text-center text-sm text-gray-500 mt-4">
+        ¿No tenés cuenta?{' '}
+        <Link href="/register" className="text-[#2a9d8f] font-medium hover:underline">
+          Registrate
+        </Link>
+      </p>
+      <p className="text-center text-sm text-gray-500 mt-2">
+        <Link href="/" className="text-[#2a9d8f] font-medium hover:underline">
+          ← Volver al inicio
+        </Link>
+      </p>
     </AuthCard>
   )
 }
