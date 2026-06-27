@@ -10,6 +10,7 @@ import availabilityRoutes from './adapters/http/routes/availability.routes'
 import patientRoutes from './adapters/http/routes/patient.routes'
 import medicalNoteRoutes from './adapters/http/routes/medical-note.routes'
 import userRoutes from './adapters/http/routes/user.routes'
+import dashboardRoutes from './adapters/http/routes/dashboard.routes'
 
 const app = express()
 
@@ -28,5 +29,6 @@ app.use('/availability', availabilityRoutes)
 app.use('/patients', patientRoutes)
 app.use('/medical-notes', medicalNoteRoutes)
 app.use('/users', userRoutes)
+app.use('/dashboard', dashboardRoutes)
 
 export default app
