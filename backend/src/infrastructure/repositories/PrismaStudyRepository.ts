@@ -3,6 +3,10 @@ import { Study } from '../../domain/entities/Study'
 import prisma from '../../prisma'
 
 export class PrismaStudyRepository implements IStudyRepository {
+  async findById(id: string): Promise<Study | null> {
+    return prisma.study.findUnique({ where: { id } })
+  }
+
   async findByPatient(patientDni: number): Promise<Study[]> {
     return prisma.study.findMany({
       where: { patientDni },

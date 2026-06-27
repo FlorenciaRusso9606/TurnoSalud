@@ -115,6 +115,21 @@ export const cancelAppointment = async (req: Request, res: Response) => {
   }
 }
 
+// GET /appointments/patient/:dni  — médico o admin ve turnos de un paciente
+export const getPatientAppointments = async (req: Request, res: Response) => {
+  const dni = parseInt(req.params.dni)
+  if (isNaN(dni)) {
+    res.status(400).json({ error: 'DNI inválido' })
+    return
+  }
+  try {
+    const appointments = await getMyAppointmentsUseCase.execute({ patientDni: dni })
+    res.json(appointments)
+  } catch (err: any) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
 // PATCH /appointments/:id/status  — médico o admin
 export const changeAppointmentStatus = async (req: Request, res: Response) => {
   const paramParsed = appointmentIdParamSchema.safeParse(req.params)

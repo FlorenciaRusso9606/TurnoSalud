@@ -18,11 +18,10 @@ function generateSlots(date: Date, startTime: string, endTime: string, intervalM
   const [startH, startM] = startTime.split(':').map(Number)
   const [endH, endM] = endTime.split(':').map(Number)
 
-  const start = new Date(date)
-  start.setHours(startH, startM, 0, 0)
+  const [year, month, day] = date.toISOString().slice(0, 10).split('-').map(Number)
 
-  const end = new Date(date)
-  end.setHours(endH, endM, 0, 0)
+  const start = new Date(year, month - 1, day, startH, startM, 0, 0)
+  const end   = new Date(year, month - 1, day, endH, endM, 0, 0)
 
   const current = new Date(start)
   while (current < end) {

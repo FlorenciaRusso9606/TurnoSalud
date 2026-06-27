@@ -1,4 +1,5 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { randomUUID } from 'crypto'
 
 const s3 = new S3Client({
@@ -28,4 +29,17 @@ export async function uploadFileToS3(
   )
 
   return `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
+}
+
+export function extractS3Key(fileUrl: string): string {
+  const url = new URL(fileUrl)
+  return url.pathname.slice(1)
+}
+
+export async function getPresignedDownloadUrl(key: string, expiresInSeconds = 300): Promise<string> {
+  const command = new GetObjectCommand({
+    Bucket: process.env.AWS_S3_BUCKET!,
+    Key: key,
+  })
+  return getSignedUrl(s3, command, { expiresIn: expiresInSeconds })
 }

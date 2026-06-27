@@ -14,4 +14,8 @@ export const patientDniParamSchema = z.object({
   dni: z.coerce.number().int().positive(),
 })
 
+export const studyIdParamSchema = z.object({
+  studyId: z.string().uuid('ID de estudio inválido'),
+})
+
 export type UploadStudyInput = z.infer<typeof uploadSchema>

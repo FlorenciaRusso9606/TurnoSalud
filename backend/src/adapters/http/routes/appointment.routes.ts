@@ -4,6 +4,7 @@ import {
   getAvailableSlots,
   getMyAppointments,
   getDoctorAppointments,
+  getPatientAppointments,
   bookAppointment,
   cancelAppointment,
   changeAppointmentStatus
@@ -21,6 +22,7 @@ router.patch('/:id/cancel', authenticate, authorize('PATIENT'), cancelAppointmen
 
 // Médico
 router.get('/doctor', authenticate, authorize('DOCTOR'), getDoctorAppointments)
+router.get('/patient/:dni', authenticate, authorize('DOCTOR', 'ADMIN'), getPatientAppointments)
 
 // Médico o admin
 router.patch('/:id/status', authenticate, authorize('DOCTOR', 'ADMIN'), changeAppointmentStatus)
