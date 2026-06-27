@@ -9,7 +9,7 @@ import {
 
 const router = Router()
 
-router.get('/', authenticate, authorize('ADMIN'), getAvailabilityByDoctor)
+router.get('/', authenticate, getAvailabilityByDoctor)
 router.post('/', authenticate, authorize('ADMIN'), createAvailability)
 router.put('/:id', authenticate, authorize('ADMIN'), updateAvailability)
 router.delete('/:id', authenticate, authorize('ADMIN'), deleteAvailability)
