@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import prisma from '../../../prisma'
 
 export interface AuthPayload {
   userId: number
@@ -18,7 +19,7 @@ declare global {
   }
 }
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Token requerido' })
@@ -34,6 +35,16 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
   try {
     const payload = jwt.verify(token, secret) as AuthPayload
+
+    const dbUser = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { isActive: true },
+    })
+    if (!dbUser?.isActive) {
+      res.status(401).json({ error: 'Tu cuenta ha sido desactivada' })
+      return
+    }
+
     req.user = payload
     next()
   } catch {

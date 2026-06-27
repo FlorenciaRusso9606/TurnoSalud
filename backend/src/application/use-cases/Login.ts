@@ -22,6 +22,8 @@ export class LoginUseCase {
     const user = await this.userRepository.findByDni(input.dni)
     if (!user) throw new Error('No existe una cuenta con ese DNI')
 
+    if (!user.isActive) throw new Error('Tu cuenta ha sido desactivada')
+
     const passwordMatch = await bcrypt.compare(input.password, user.password)
     if (!passwordMatch) throw new Error('La contraseña es incorrecta')
 
