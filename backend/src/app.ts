@@ -8,6 +8,8 @@ import specialtyRoutes from './adapters/http/routes/specialty.routes'
 import doctorRoutes from './adapters/http/routes/doctor.routes'
 import availabilityRoutes from './adapters/http/routes/availability.routes'
 import patientRoutes from './adapters/http/routes/patient.routes'
+import medicalNoteRoutes from './adapters/http/routes/medical-note.routes'
+import userRoutes from './adapters/http/routes/user.routes'
 
 const app = express()
 
@@ -24,5 +26,7 @@ app.use('/specialties', specialtyRoutes)
 app.use('/doctors', doctorRoutes)
 app.use('/availability', availabilityRoutes)
 app.use('/patients', patientRoutes)
+app.use('/medical-notes', medicalNoteRoutes)
+app.use('/users', userRoutes)
 
 export default app
