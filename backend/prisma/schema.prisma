@@ -19,6 +19,10 @@ model User {
   lastname  String
   password  String
   role      Role     @default(PATIENT)
+  isActive  Boolean  @default(true)
+  email     String?
+  phone     String?
+  address   String?
   createdAt DateTime @default(now())
 
   patient Patient?
@@ -45,6 +49,7 @@ model Patient {
   user         User          @relation(fields: [dni], references: [dni])
   appointments Appointment[]
   studies      Study[]
+  notes        MedicalNote[]
 }
 
 // ─────────────────────────────────────────
@@ -74,8 +79,27 @@ model Doctor {
   appointments        Appointment[]
   availability        DoctorAvailability[]
   responsibleStudies  Study[]
+  notes               MedicalNote[]
 
   @@index([specialtyId])
+}
+
+// ─────────────────────────────────────────
+// MEDICAL NOTE
+// ─────────────────────────────────────────
+
+model MedicalNote {
+  id            String   @id @default(uuid())
+  patientDni    Int
+  doctorLicense Int
+  content       String
+  createdAt     DateTime @default(now())
+
+  patient Patient @relation(fields: [patientDni], references: [dni])
+  doctor  Doctor  @relation(fields: [doctorLicense], references: [licenseNumber])
+
+  @@index([patientDni])
+  @@index([doctorLicense])
 }
 
 // ─────────────────────────────────────────
