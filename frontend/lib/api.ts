@@ -1,5 +1,8 @@
-import { getToken } from './auth'
-import { Appointment, Study, StudyType, Doctor, DoctorDetail, Patient } from '@/types'
+import { getToken, removeToken } from './auth'
+import {
+  Appointment, AvailableSlot, Study, StudyType, Doctor, DoctorDetail, DoctorAdmin,
+  Patient, PatientRecord, Specialty, UserAdmin, MedicalNote,
+} from '@/types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -14,6 +17,20 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       ...options.headers,
     },
   })
+
+  if (res.status === 401) {
+    if (getToken()) {
+      removeToken()
+      window.location.href = '/login?expired=1'
+    }
+    const data = await res.json()
+    throw new Error(data.error ?? 'No autorizado')
+  }
+
+  if (res.status === 403) {
+    window.location.href = '/'
+    throw new Error('Sin permisos')
+  }
 
   if (res.status === 204) return undefined as T
 
@@ -73,6 +90,9 @@ export const api = {
         method: 'PATCH',
         body: JSON.stringify({ status }),
       }),
+
+    getByPatient: (dni: number) =>
+      request<Appointment[]>(`/appointments/patient/${dni}`),
   },
 
   // ─── Studies ───────────────────────────────────────────────────────────────
@@ -81,6 +101,9 @@ export const api = {
     getMine: () => request<Study[]>('/studies/mine'),
 
     getByPatient: (dni: number) => request<Study[]>(`/studies/patient/${dni}`),
+
+    getDownloadUrl: (studyId: string) =>
+      request<{ url: string }>(`/studies/${studyId}/download`),
 
     upload: async (formData: FormData) => {
       const token = getToken()
@@ -104,7 +127,16 @@ export const api = {
   // ─── Specialties ───────────────────────────────────────────────────────────
 
   specialties: {
-    getAll: () => request<{ id: number; name: string }[]>('/specialties'),
+    getAll: () => request<Specialty[]>('/specialties'),
+
+    create: (body: { name: string }) =>
+      request<Specialty>('/specialties', { method: 'POST', body: JSON.stringify(body) }),
+
+    update: (id: number, body: { name: string }) =>
+      request<Specialty>(`/specialties/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+
+    delete: (id: number) =>
+      request<void>(`/specialties/${id}`, { method: 'DELETE' }),
   },
 
   // ─── Doctors ───────────────────────────────────────────────────────────────
@@ -113,18 +145,61 @@ export const api = {
     getBySpecialty: (specialtyId: number) =>
       request<Doctor[]>(`/doctors?specialtyId=${specialtyId}`),
 
+    getAll: () => request<DoctorAdmin[]>('/doctors/all'),
+
     getByLicense: (licenseNumber: number) =>
       request<DoctorDetail>(`/doctors/${licenseNumber}`),
 
     search: (q: string) =>
       request<DoctorDetail[]>(`/doctors/search?q=${encodeURIComponent(q)}`),
+
+    create: (body: {
+      dni: number; name: string; lastname: string
+      licenseNumber: number; specialtyId: number; password: string
+    }) => request<{ licenseNumber: number; name: string; lastname: string }>(
+      '/doctors', { method: 'POST', body: JSON.stringify(body) }
+    ),
+
+    update: (licenseNumber: number, body: { specialtyId?: number }) =>
+      request(`/doctors/${licenseNumber}`, { method: 'PATCH', body: JSON.stringify(body) }),
   },
 
   // ─── Patients ──────────────────────────────────────────────────────────────
 
   patients: {
-    getAll: () => request<Patient[]>('/patients'),
-    search: (q: string) => request<Patient[]>(`/patients/search?q=${encodeURIComponent(q)}`),
+    getAll:    () => request<Patient[]>('/patients'),
+    search:    (q: string) => request<Patient[]>(`/patients/search?q=${encodeURIComponent(q)}`),
+    getByDni:  (dni: number) => request<Patient>(`/patients/${dni}`),
+    getRecord: (dni: number) => request<PatientRecord>(`/patients/${dni}/record`),
+
+    create: (body: {
+      dni: number; name: string; lastname: string; birthDate: string; password: string
+      socialWork?: string; email?: string; phone?: string; address?: string
+    }) => request<{ dni: number; name: string; lastname: string }>(
+      '/patients', { method: 'POST', body: JSON.stringify(body) }
+    ),
+
+    update: (dni: number, body: {
+      socialWork?: string | null; email?: string | null; phone?: string | null; address?: string | null
+    }) => request(`/patients/${dni}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  },
+
+  // ─── Medical Notes ─────────────────────────────────────────────────────────
+
+  medicalNotes: {
+    create: (body: { patientDni: number; content: string }) =>
+      request<MedicalNote>('/medical-notes', { method: 'POST', body: JSON.stringify(body) }),
+  },
+
+  // ─── Users (admin) ─────────────────────────────────────────────────────────
+
+  users: {
+    getAll: () => request<UserAdmin[]>('/users'),
+
+    update: (id: number, body: {
+      isActive?: boolean; email?: string | null; phone?: string | null
+      address?: string | null; password?: string
+    }) => request<UserAdmin>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   },
 
   // ─── Availability ──────────────────────────────────────────────────────────

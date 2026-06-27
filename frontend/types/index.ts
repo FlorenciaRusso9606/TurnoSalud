@@ -8,6 +8,19 @@ export interface User {
   role: Role
 }
 
+export interface UserAdmin {
+  id: number
+  dni: number
+  name: string
+  lastname: string
+  role: Role
+  isActive: boolean
+  email: string | null
+  phone: string | null
+  address: string | null
+  createdAt: string
+}
+
 export interface Appointment {
   id: number
   scheduledAt: string
@@ -15,6 +28,11 @@ export interface Appointment {
   patientDni: number
   doctorLicense: number
   specialtyId: number
+  specialtyName?: string | null
+  doctorName?: string | null
+  patientName?: string | null
+  patientLastname?: string | null
+  patientSocialWork?: string | null
 }
 
 export interface Patient {
@@ -23,6 +41,9 @@ export interface Patient {
   lastname: string
   birthDate: string
   socialWork: string | null
+  email?: string | null
+  phone?: string | null
+  address?: string | null
 }
 
 export interface StudyType {
@@ -42,6 +63,46 @@ export interface Study {
   responsibleDoctorLicense: number
   createdBy: number
   createdAt: string
+}
+
+export interface RecordStudy {
+  id: string
+  title: string
+  institution: string
+  performedAt: string
+  fileUrl: string
+  studyTypeName: string | null
+}
+
+export interface RecordAppointment {
+  id: number
+  scheduledAt: string
+  status: AppointmentStatus
+  specialtyName: string | null
+}
+
+export interface MedicalNote {
+  id: string
+  content: string
+  createdAt: string
+  doctorLicense: number
+  doctorName: string
+  doctorLastname: string
+}
+
+export interface PatientRecord {
+  patient: Patient
+  notes: MedicalNote[]
+  summary: {
+    totalStudies: number
+    totalAppointments: number
+    totalNotes: number
+    lastStudy: { id: string; title: string; performedAt: string } | null
+    nextAppointment: RecordAppointment | null
+  }
+  studies: RecordStudy[]
+  nextAppointment: RecordAppointment | null
+  history: RecordAppointment[]
 }
 
 export interface AvailableSlot {
@@ -64,6 +125,17 @@ export interface Doctor {
 
 export interface DoctorDetail extends Doctor {
   specialty: { name: string }
+}
+
+export interface DoctorAdmin {
+  licenseNumber: number
+  specialtyId: number
+  specialtyName: string
+  name: string
+  lastname: string
+  isActive: boolean
+  email: string | null
+  phone: string | null
 }
 
 export interface DoctorAvailability {
