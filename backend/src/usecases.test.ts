@@ -1,4 +1,4 @@
-import { BookAppointmentUseCase } from './application/use-cases/BookAppointment'
+﻿import { BookAppointmentUseCase } from './application/use-cases/BookAppointment'
 import { CancelAppointmentUseCase } from './application/use-cases/CancelAppointment'
 import { ChangeAppointmentStatusUseCase } from './application/use-cases/ChangeAppointmentStatus'
 import { GetAvailableSlotsUseCase } from './application/use-cases/GetAvailableSlots'
@@ -14,9 +14,7 @@ import { Appointment, AppointmentStatus } from './domain/entities/Appointment'
 import { DoctorAvailability } from './domain/entities/DoctorAvailability'
 import { Study } from './domain/entities/Study'
 
-// ─────────────────────────────────────────
 // MOCKS
-// ─────────────────────────────────────────
 
 const makeAppointmentRepo = (appointments: Appointment[] = []): IAppointmentRepository => ({
   findById: async (id) => appointments.find(a => a.id === id) ?? null,
@@ -66,9 +64,7 @@ const makeStudyRepo = (studies: Study[] = []): IStudyRepository => ({
   }),
 })
 
-// ─────────────────────────────────────────
 // HELPERS
-// ─────────────────────────────────────────
 
 const makeAvailability = (license: number, date: Date): DoctorAvailability => ({
   id: 1,
@@ -91,9 +87,7 @@ const makeAppointment = (overrides: Partial<Appointment> = {}): Appointment => (
   ...overrides,
 })
 
-// ─────────────────────────────────────────
 // BookAppointmentUseCase
-// ─────────────────────────────────────────
 
 describe('BookAppointmentUseCase', () => {
   const date = new Date('2026-07-01T08:00:00')
@@ -147,9 +141,7 @@ describe('BookAppointmentUseCase', () => {
   })
 })
 
-// ─────────────────────────────────────────
 // CancelAppointmentUseCase
-// ─────────────────────────────────────────
 
 describe('CancelAppointmentUseCase', () => {
   it('cancela un turno PENDING del paciente', async () => {
@@ -182,9 +174,7 @@ describe('CancelAppointmentUseCase', () => {
   })
 })
 
-// ─────────────────────────────────────────
 // ChangeAppointmentStatusUseCase
-// ─────────────────────────────────────────
 
 describe('ChangeAppointmentStatusUseCase', () => {
   it('confirma un turno PENDING', async () => {
@@ -216,9 +206,7 @@ describe('ChangeAppointmentStatusUseCase', () => {
   })
 })
 
-// ─────────────────────────────────────────
 // GetAvailableSlotsUseCase
-// ─────────────────────────────────────────
 
 describe('GetAvailableSlotsUseCase', () => {
   it('devuelve slots libres descontando los ocupados', async () => {
@@ -258,9 +246,7 @@ describe('GetAvailableSlotsUseCase', () => {
   })
 })
 
-// ─────────────────────────────────────────
 // GetMyAppointmentsUseCase
-// ─────────────────────────────────────────
 
 describe('GetMyAppointmentsUseCase', () => {
   it('devuelve los turnos del paciente', async () => {
@@ -286,9 +272,7 @@ describe('GetMyAppointmentsUseCase', () => {
   })
 })
 
-// ─────────────────────────────────────────
 // GetPatientStudiesUseCase
-// ─────────────────────────────────────────
 
 describe('GetPatientStudiesUseCase', () => {
   it('devuelve los estudios del paciente ordenados', async () => {
@@ -305,9 +289,7 @@ describe('GetPatientStudiesUseCase', () => {
   })
 })
 
-// ─────────────────────────────────────────
 // UploadStudyUseCase
-// ─────────────────────────────────────────
 
 describe('UploadStudyUseCase', () => {
   it('crea un estudio con los datos correctos', async () => {
