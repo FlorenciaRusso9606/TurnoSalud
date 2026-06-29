@@ -7,7 +7,7 @@ import { uploadSchema, patientDniParamSchema, studyIdParamSchema } from '../sche
 import { GetPatientStudiesUseCase } from '../../../application/use-cases/GetPatientStudies'
 import { UploadStudyUseCase } from '../../../application/use-cases/UploadStudy'
 import { PrismaStudyRepository } from '../../../infrastructure/repositories/PrismaStudyRepository'
-import { uploadFileToS3, extractS3Key, getPresignedDownloadUrl } from '../../../lib/s3'
+import { uploadFileToS3, extractS3Key, getPresignedDownloadUrl, s3KeyExists } from '../../../lib/s3'
 
 const studyRepository = new PrismaStudyRepository()
 const getPatientStudiesUseCase = new GetPatientStudiesUseCase(studyRepository)
@@ -52,6 +52,10 @@ export const getStudyDownloadUrl = async (req: Request, res: Response) => {
 
   try {
     const key = extractS3Key(study.fileUrl)
+    if (!await s3KeyExists(key)) {
+      res.status(404).json({ error: 'El archivo no está disponible en el servidor' })
+      return
+    }
     const url = await getPresignedDownloadUrl(key)
     res.json({ url })
   } catch (err: any) {

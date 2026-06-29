@@ -9,8 +9,12 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { formatShortDate } from '@/lib/dateUtils'
 
 async function openStudy(studyId: string) {
-  const { url } = await api.studies.getDownloadUrl(studyId)
-  window.open(url, '_blank')
+  try {
+    const { url } = await api.studies.getDownloadUrl(studyId)
+    window.open(url, '_blank')
+  } catch (e: any) {
+    alert(e.message)
+  }
 }
 
 export default function MisEstudiosPage() {

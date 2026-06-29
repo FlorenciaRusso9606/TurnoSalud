@@ -14,8 +14,12 @@ import { formatDate, formatShortDate } from '@/lib/dateUtils'
 const STUDIES_PREVIEW = 4
 
 async function openStudy(studyId: string) {
-  const { url } = await api.studies.getDownloadUrl(studyId)
-  window.open(url, '_blank')
+  try {
+    const { url } = await api.studies.getDownloadUrl(studyId)
+    window.open(url, '_blank')
+  } catch (e: any) {
+    alert(e.message)
+  }
 }
 
 function NoteCard({ note }: { note: MedicalNote }) {

@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client, PutObjectCommand, GetObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { randomUUID } from 'crypto'
 
@@ -34,6 +34,16 @@ export async function uploadFileToS3(
 export function extractS3Key(fileUrl: string): string {
   const url = new URL(fileUrl)
   return url.pathname.slice(1)
+}
+
+export async function s3KeyExists(key: string): Promise<boolean> {
+  try {
+    await s3.send(new HeadObjectCommand({ Bucket: process.env.AWS_S3_BUCKET!, Key: key }))
+    return true
+  } catch (err: any) {
+    if (err.name === 'NotFound' || err.$metadata?.httpStatusCode === 404) return false
+    throw err
+  }
 }
 
 export async function getPresignedDownloadUrl(key: string, expiresInSeconds = 300): Promise<string> {

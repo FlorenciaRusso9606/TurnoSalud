@@ -12,7 +12,8 @@ export default function DisponibilidadPage() {
   const [availability, setAvailability] = useState<DoctorAvailability[]>([])
   const [loadingDoctor, setLoadingDoctor] = useState(false)
 
-  async function handleSelect(d: DoctorDetail) {
+  async function handleSelect(d: DoctorDetail | null) {
+    if (!d) { setDoctor(null); setAvailability([]); return }
     setDoctor(d)
     setLoadingDoctor(true)
     try {
