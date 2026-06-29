@@ -59,7 +59,7 @@ export default function PatientStudiesPage() {
             key={study.id}
             className="bg-white rounded-2xl border border-gray-100 px-6 py-4 flex items-center gap-4"
           >
-            <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center shrink-0">
               <span className="text-orange-500 text-xs font-bold">PDF</span>
             </div>
 
