@@ -1,4 +1,4 @@
-# TurnoSalud — Hospital Zonal · General Roca · Río Negro
+# TurnoSalud - Hospital Zonal · General Roca · Río Negro
 
 Sistema de gestión de turnos médicos, estudios clínicos y administración hospitalaria del Hospital Zonal de General Roca, Provincia de Río Negro, Argentina.
 
@@ -111,7 +111,7 @@ npm test
 
 ## Deploy
 
-### Backend — Railway
+### Backend - Railway
 
 1. Crear proyecto en [Railway](https://railway.app) y conectar este repositorio
 2. Seleccionar el directorio `backend` como root
@@ -119,7 +119,7 @@ npm test
 4. Agregar las variables de entorno en el panel de Railway
 5. Agregar un servicio PostgreSQL desde Railway o conectar Supabase
 
-### Frontend — Vercel
+### Frontend - Vercel
 
 1. Importar el repositorio en [Vercel](https://vercel.com)
 2. Configurar **Root Directory** como `frontend`
