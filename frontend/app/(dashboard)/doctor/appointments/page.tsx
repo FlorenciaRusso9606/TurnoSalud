@@ -115,16 +115,7 @@ export default function DoctorAppointmentsPage() {
 
                 {/* Fila de acciones */}
                 <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-50">
-                  {a.status === 'PENDING' && (
-                    <Button
-                      variant="success"
-                      onClick={() => handleChangeStatus(a.id, 'CONFIRMED')}
-                      className="text-sm px-3 py-1.5"
-                    >
-                      Confirmar
-                    </Button>
-                  )}
-                  {(a.status === 'PENDING' || a.status === 'CONFIRMED') && (
+                  {a.status === 'CONFIRMED' && (
                     <Button
                       variant="danger"
                       onClick={() => handleChangeStatus(a.id, 'ABSENT')}

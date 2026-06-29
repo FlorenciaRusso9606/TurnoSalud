@@ -89,6 +89,14 @@ export const api = {
 
     getByPatient: (dni: number) =>
       request<Appointment[]>(`/appointments/patient/${dni}`),
+
+    getAdmin: (range: 'today' | 'week' | 'month', status?: string, doctorLicense?: number, patientDni?: number) => {
+      const params = new URLSearchParams({ range })
+      if (status)        params.set('status',        status)
+      if (doctorLicense) params.set('doctorLicense', String(doctorLicense))
+      if (patientDni)    params.set('patientDni',    String(patientDni))
+      return request<Appointment[]>(`/appointments/admin?${params}`)
+    },
   },
 
   studies: {

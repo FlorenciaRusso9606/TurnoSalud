@@ -14,6 +14,11 @@ const VALID_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]> = {
   ABSENT:    [],
 }
 
+const ROLE_ALLOWED: Record<'DOCTOR' | 'ADMIN', AppointmentStatus[]> = {
+  DOCTOR: ['ABSENT'],
+  ADMIN:  ['CONFIRMED', 'CANCELLED'],
+}
+
 export class ChangeAppointmentStatusUseCase {
   constructor(private appointmentRepository: IAppointmentRepository) {}
 
@@ -24,11 +29,13 @@ export class ChangeAppointmentStatusUseCase {
       throw new Error('Turno no encontrado')
     }
 
+    if (!ROLE_ALLOWED[input.role].includes(input.newStatus)) {
+      throw new Error('Sin permisos para esta acción')
+    }
+
     const allowedTransitions = VALID_TRANSITIONS[appointment.status]
     if (!allowedTransitions.includes(input.newStatus)) {
-      throw new Error(
-        `No se puede cambiar de ${appointment.status} a ${input.newStatus}`
-      )
+      throw new Error(`No se puede cambiar de ${appointment.status} a ${input.newStatus}`)
     }
 
     return this.appointmentRepository.updateStatus(input.appointmentId, input.newStatus)

@@ -4,23 +4,31 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   CalendarDays, CalendarPlus, FileText, Clock, Users, CalendarRange,
-  Upload, Stethoscope, BookOpen, UserCog, LayoutDashboard,
+  Upload, Stethoscope, BookOpen, UserCog, LayoutDashboard, CalendarCheck,
 } from 'lucide-react'
 import { getUserRole } from '@/lib/auth'
 
-const patientLinks = [
-  { href: '/appointments',     label: 'Mis Turnos',   icon: CalendarDays },
+interface NavLink {
+  href: string
+  label: string
+  icon: React.ElementType
+  exact?: boolean
+}
+
+const patientLinks: NavLink[] = [
+  { href: '/appointments',     label: 'Mis Turnos',   icon: CalendarDays, exact: true },
   { href: '/appointments/new', label: 'Sacar Turno',  icon: CalendarPlus },
   { href: '/studies',          label: 'Mis Estudios', icon: FileText     },
 ]
 
-const doctorLinks = [
+const doctorLinks: NavLink[] = [
   { href: '/doctor/appointments', label: 'Turnos de Hoy', icon: Clock  },
   { href: '/doctor/patients',     label: 'Pacientes',     icon: Users  },
 ]
 
-const adminLinks = [
+const adminLinks: NavLink[] = [
   { href: '/admin/dashboard',    label: 'Dashboard',      icon: LayoutDashboard },
+  { href: '/admin/appointments', label: 'Turnos',         icon: CalendarCheck   },
   { href: '/admin/patients',     label: 'Pacientes',      icon: Users           },
   { href: '/admin/doctors',      label: 'Médicos',        icon: Stethoscope     },
   { href: '/admin/specialties',  label: 'Especialidades', icon: BookOpen        },
@@ -44,8 +52,10 @@ export function Sidebar() {
         Menú
       </p>
       <nav className="flex flex-col gap-1">
-        {links.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || (href !== '/' && pathname.startsWith(href))
+        {links.map(({ href, label, icon: Icon, exact }) => {
+          const active = exact
+            ? pathname === href
+            : pathname === href || (href !== '/' && pathname.startsWith(href))
           return (
             <Link
               key={href}
