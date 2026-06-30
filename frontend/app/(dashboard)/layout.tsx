@@ -11,14 +11,4 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </main>
     </div>
   )
-}import Link from 'next/link'
-
-const cards = [
-  { icon: '📅', title: 'Sacar Turno',      desc: 'Pedí turno con tu médico de cabecera o especialista',  href: '/login' },
-  { icon: '🩺', title: 'Especialidades',   desc: 'Clínica Médica, Cardiología, Pediatría, Traumatología y más', href: '/login' },
-  { icon: '📄', title: 'Mis Estudios',     desc: 'Accedé a tus resultados de laboratorio e imágenes',    href: '/login' },
-  { icon: '📞', title: 'Contacto',         desc: 'Guardia: (0298) 444-0000 · Turnos: (0298) 444-0001',   href: '#contacto' },
-  { icon: '🚑', title: 'Emergencias',      desc: 'Emergencias médicas: 107 · Defensa Civil: 103',        href: '#contacto' },
-  { icon: 'ℹ️', title: 'Información',      desc: 'Horarios de atención, ubicación y servicios del hospital', href: '#contacto' },
-]
-
+}
