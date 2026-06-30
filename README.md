@@ -1,6 +1,6 @@
-# TurnoSalud - Hospital Zonal · General Roca · Río Negro
+# TurnoSalud - Hospital Cervantes · Río Negro
 
-Sistema de gestión de turnos médicos, estudios clínicos y administración hospitalaria del Hospital Zonal de General Roca, Provincia de Río Negro, Argentina.
+Sistema de gestión de turnos médicos, estudios clínicos y administración hospitalaria del Hospital Cervantes, Provincia de Río Negro, Argentina.
 
 ## Stack tecnológico
 

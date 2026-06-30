@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import {
   Plus, Calendar, Stethoscope, FileText, Syringe,
   Droplets, Baby, HeartHandshake, Phone, MapPin, Mail,
@@ -69,6 +69,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
 
+      {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -76,8 +77,8 @@ export default function LandingPage() {
               <Plus className="text-white" size={18} strokeWidth={2.5} />
             </div>
             <div>
-              <span className="font-bold text-[#1d3557] text-base leading-none block">TurnoSalud</span>
-              <span className="text-[10px] text-gray-400 leading-none">Hospital de Roca · Río Negro</span>
+              <span className="font-bold text-[#1d3557] text-base leading-none block">Hospital Cervantes</span>
+              <span className="text-[10px] text-gray-400 leading-none">Río Negro · Argentina</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -98,56 +99,63 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <section
-        className="relative flex items-center justify-center bg-cover bg-center pt-16"
-        style={{
-          minHeight: '70vh',
-          backgroundImage:
-            "linear-gradient(to bottom, rgba(29,53,87,0.70), rgba(29,53,87,0.85)), url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600')",
-        }}
-      >
-        <div className="text-center text-white px-4 py-20">
-          <p className="text-xs font-semibold tracking-widest uppercase text-[#a8dadc] mb-4">
-            Hospital Zonal · General Roca · Río Negro
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4 leading-tight">
-            Tu salud, más cerca
-          </h1>
-          <p className="text-lg text-gray-200 mb-8 max-w-lg mx-auto leading-relaxed">
-            Gestioná tus turnos médicos, accedé a tus estudios y mantente al día con las campañas del hospital.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/login"
-              className="bg-[#2a9d8f] hover:bg-[#238a7e] text-white px-8 py-3 rounded-xl font-semibold text-base transition-colors"
-            >
-              Sacar turno
-            </Link>
-            <a
-              href="#campanas"
-              className="border border-white/40 hover:border-white text-white px-8 py-3 rounded-xl font-semibold text-base transition-colors"
-            >
-              Ver campañas
-            </a>
+      {/* Banner principal — foto real + info */}
+      <section className="pt-16 bg-white">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2" style={{ minHeight: '420px' }}>
+          {/* Texto */}
+          <div className="flex flex-col justify-center px-8 py-14 lg:py-20">
+            <p className="text-[11px] font-semibold tracking-widest uppercase text-[#2a9d8f] mb-3">
+              Ministerio de Salud · Provincia de Río Negro
+            </p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-[#1d3557] mb-4 leading-tight">
+              Hospital Cervantes
+            </h1>
+            <p className="text-gray-500 text-base mb-8 leading-relaxed max-w-sm">
+              Solicitá turnos, consultá tus estudios y accedé a los servicios del hospital desde la plataforma.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/login"
+                className="bg-[#2a9d8f] hover:bg-[#238a7e] text-white px-7 py-2.5 rounded-xl font-semibold text-sm transition-colors text-center"
+              >
+                Sacar turno
+              </Link>
+              <a
+                href="#campanas"
+                className="border border-gray-200 hover:border-[#2a9d8f] text-gray-600 hover:text-[#2a9d8f] px-7 py-2.5 rounded-xl font-semibold text-sm transition-colors text-center"
+              >
+                Ver campañas
+              </a>
+            </div>
+          </div>
+
+          {/* Foto del hospital */}
+          <div className="hidden lg:block relative overflow-hidden">
+            <img
+              src="/hospital-cervantes.webp"
+              alt="Hospital Cervantes · Río Negro"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           </div>
         </div>
 
-        {/* Emergencia strip */}
-        <div className="absolute bottom-0 left-0 right-0 bg-red-600/90 backdrop-blur-sm py-2.5 px-6">
-          <div className="max-w-6xl mx-auto flex items-center justify-center gap-6 text-white text-sm flex-wrap">
-            <span className="flex items-center gap-1.5 font-semibold">
-              <ShieldAlert size={15} />
+        {/* Franja emergencias — navy, discreta */}
+        <div className="bg-[#1d3557] py-2.5 px-6">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-6 text-white/80 text-sm flex-wrap">
+            <span className="flex items-center gap-1.5 font-semibold text-white">
+              <ShieldAlert size={14} />
               Emergencias:
             </span>
-            <span>Guardia <strong>(0298) 444-0000</strong></span>
-            <span>·</span>
-            <span>SAME <strong>107</strong></span>
-            <span>·</span>
-            <span>Defensa Civil <strong>103</strong></span>
+            <span>Guardia <strong className="text-white">(0298) 444-0000</strong></span>
+            <span className="text-white/30">·</span>
+            <span>SAME <strong className="text-white">107</strong></span>
+            <span className="text-white/30">·</span>
+            <span>Defensa Civil <strong className="text-white">103</strong></span>
           </div>
         </div>
       </section>
 
+      {/* Servicios */}
       <section className="bg-[#f8fafc] py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-[#1d3557] mb-2 text-center">Servicios del hospital</h2>
@@ -174,11 +182,12 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Campañas */}
       <section id="campanas" className="bg-white py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-[#1d3557] mb-2 text-center">Programas y campañas de salud</h2>
           <p className="text-gray-500 text-center text-sm mb-10">
-            Iniciativas del Hospital de Roca para la comunidad de General Roca y la región
+            Iniciativas del Hospital Cervantes para la comunidad y la región
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {campaigns.map(({ icon: Icon, title, desc, bg, iconColor, badge, badgeColor }) => (
@@ -203,6 +212,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Ubicación y contacto */}
       <section id="contacto" className="bg-[#f8fafc] py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-[#1d3557] mb-10 text-center">Dónde encontrarnos</h2>
@@ -211,24 +221,24 @@ export default function LandingPage() {
             {/* Mapa */}
             <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm h-80">
               <iframe
-                src="https://maps.google.com/maps?q=Hospital+Zonal+General+Roca+Río+Negro+Argentina&output=embed&hl=es&z=15"
+                src="https://maps.google.com/maps?q=Cervantes+Río+Negro+Argentina&output=embed&hl=es&z=14"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Ubicación Hospital de Roca"
+                title="Ubicación Hospital Cervantes"
               />
             </div>
 
             {/* Info */}
             <div className="flex flex-col gap-6">
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
-                <h3 className="font-semibold text-[#1d3557] mb-4">Hospital Zonal · General Roca</h3>
+                <h3 className="font-semibold text-[#1d3557] mb-4">Hospital Cervantes · Río Negro</h3>
                 <ul className="space-y-3 text-sm text-gray-600">
                   <li className="flex items-start gap-3">
                     <MapPin size={16} className="text-[#2a9d8f] mt-0.5 shrink-0" />
-                    <span>General Roca, Río Negro, Argentina</span>
+                    <span>Cervantes, Río Negro, Argentina</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Phone size={16} className="text-[#2a9d8f] shrink-0" />
@@ -239,7 +249,7 @@ export default function LandingPage() {
                   </li>
                   <li className="flex items-center gap-3">
                     <Mail size={16} className="text-[#2a9d8f] shrink-0" />
-                    <span>contacto@turnosalud.gob.ar</span>
+                    <span>contacto@hospitalcervantes.gob.ar</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <Clock size={16} className="text-[#2a9d8f] mt-0.5 shrink-0" />
@@ -272,16 +282,17 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="bg-[#1d3557] text-white py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center">
               <Plus size={14} className="text-white" strokeWidth={2.5} />
             </div>
-            <span className="font-semibold">TurnoSalud</span>
+            <span className="font-semibold">Hospital Cervantes</span>
           </div>
           <p className="text-xs text-white/50 text-center">
-            © {new Date().getFullYear()} TurnoSalud · Ministerio de Salud · Provincia de Río Negro
+            © {new Date().getFullYear()} Hospital Cervantes · Ministerio de Salud · Provincia de Río Negro
           </p>
           <div className="flex gap-4 text-xs text-white/50">
             <Link href="/login" className="hover:text-white transition-colors">Ingresar</Link>

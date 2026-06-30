@@ -13,7 +13,7 @@ export function Navbar() {
         <div className="w-8 h-8 bg-[#2a9d8f] rounded-lg flex items-center justify-center">
           <Plus size={18} className="text-white" strokeWidth={2.5} />
         </div>
-        <span className="font-semibold text-[#1d3557] text-lg">TurnoSalud</span>
+        <span className="font-semibold text-[#1d3557] text-lg">Hospital Cervantes</span>
       </div>
 
       <div className="flex items-center gap-3">

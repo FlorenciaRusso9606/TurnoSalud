@@ -14,8 +14,8 @@ export function AuthCard({ title, subtitle, children, cardClassName }: Props) {
         <div className="w-14 h-14 bg-[#2a9d8f] rounded-2xl flex items-center justify-center mb-3">
           <Plus className="text-white" size={28} strokeWidth={2.5} />
         </div>
-        <h1 className="text-2xl font-bold text-[#1d3557]">TurnoSalud</h1>
-        <p className="text-sm text-gray-500">Hospital Público · Patagonia</p>
+        <h1 className="text-2xl font-bold text-[#1d3557]">Hospital Cervantes</h1>
+        <p className="text-sm text-gray-500">Río Negro · Argentina</p>
       </div>
 
       <div className={`bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm p-8 ${cardClassName ?? 'h-110'}`}>
