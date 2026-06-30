@@ -182,7 +182,7 @@ describe('ChangeAppointmentStatusUseCase', () => {
     const repo = makeAppointmentRepo([appointment])
     const useCase = new ChangeAppointmentStatusUseCase(repo)
 
-    const result = await useCase.execute({ appointmentId: 1, newStatus: 'CONFIRMED', role: 'DOCTOR' })
+    const result = await useCase.execute({ appointmentId: 1, newStatus: 'CONFIRMED', role: 'ADMIN' })
     expect(result.status).toBe('CONFIRMED')
   })
 
