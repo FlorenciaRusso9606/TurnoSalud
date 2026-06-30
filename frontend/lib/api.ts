@@ -62,6 +62,15 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(body),
       }),
+
+    me: () => request<{
+      dni: number; role: string; name: string; lastname: string
+      email?: string | null; phone?: string | null; address?: string | null
+      // PATIENT
+      birthDate?: string; socialWork?: string | null
+      // DOCTOR
+      licenseNumber?: number | null; specialtyName?: string | null
+    }>('/auth/me'),
   },
 
   appointments: {

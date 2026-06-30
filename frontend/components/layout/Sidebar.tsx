@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   CalendarDays, CalendarPlus, FileText, Clock, Users, CalendarRange,
-  Upload, Stethoscope, BookOpen, UserCog, LayoutDashboard, CalendarCheck,
+  Upload, Stethoscope, BookOpen, UserCog, LayoutDashboard, CalendarCheck, UserCircle,
 } from 'lucide-react'
 import { getUserRole } from '@/lib/auth'
 
@@ -47,30 +47,46 @@ export function Sidebar() {
     patientLinks
 
   return (
-    <aside className="fixed top-14 left-0 w-48 h-[calc(100vh-56px)] bg-white border-r border-gray-200 py-6 px-3">
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-3">
-        Menú
-      </p>
-      <nav className="flex flex-col gap-1">
-        {links.map(({ href, label, icon: Icon, exact }) => {
-          const active = exact
-            ? pathname === href
-            : pathname === href || (href !== '/' && pathname.startsWith(href))
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
-                active
-                  ? 'bg-[#e6f5f3] text-[#2a9d8f] font-medium'
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <Icon size={16} />
-              {label}
-            </Link>
-          )
-        })}
+    <aside className="fixed top-14 left-0 w-48 h-[calc(100vh-56px)] bg-white border-r border-gray-200 py-6 px-3 flex flex-col justify-between">
+      <div>
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-3">
+          Menú
+        </p>
+        <nav className="flex flex-col gap-1">
+          {links.map(({ href, label, icon: Icon, exact }) => {
+            const active = exact
+              ? pathname === href
+              : pathname === href || (href !== '/' && pathname.startsWith(href))
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
+                  active
+                    ? 'bg-[#e6f5f3] text-[#2a9d8f] font-medium'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <Icon size={16} />
+                {label}
+              </Link>
+            )
+          })}
+        </nav>
+      </div>
+
+      <nav className="flex flex-col gap-1 border-t border-gray-100 pt-3">
+        <Link
+          href="/profile"
+          className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
+            pathname === '/profile'
+              ? 'bg-[#e6f5f3] text-[#2a9d8f] font-medium'
+              : 'text-gray-600 hover:bg-gray-50'
+          }`}
+        >
+          <UserCircle size={16} />
+          Mi Perfil
+        </Link>
       </nav>
     </aside>
   )
