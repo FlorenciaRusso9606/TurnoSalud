@@ -1,7 +1,10 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = 'TurnoSalud <turnos@hospitalroca.gob.ar>'
+const FROM = 'Hospital Cervantes <onboarding@resend.dev>'
+
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY)
+}
 
 function formatDateTime(date: Date) {
   return date.toLocaleString('es-AR', {
@@ -29,7 +32,7 @@ function baseTemplate(content: string) {
                     </td>
                     <td style="padding-left:12px">
                       <p style="margin:0;color:#ffffff;font-size:16px;font-weight:700;line-height:1">TurnoSalud</p>
-                      <p style="margin:2px 0 0;color:rgba(255,255,255,0.75);font-size:11px">Hospital de Roca · Río Negro</p>
+                      <p style="margin:2px 0 0;color:rgba(255,255,255,0.75);font-size:11px">Hospital Cervantes · Río Negro</p>
                     </td>
                   </tr>
                 </table>
@@ -95,7 +98,7 @@ export async function sendBookingConfirmation(params: EmailParams) {
     </p>
   `
 
-  await resend.emails.send({ from: FROM, to, subject: 'Tu turno fue registrado – Hospital de Roca', html: baseTemplate(content) })
+  await getResend().emails.send({ from: FROM, to, subject: 'Tu turno fue registrado – Hospital Cervantes', html: baseTemplate(content) })
 }
 
 export async function sendAppointmentReminder(params: EmailParams) {
@@ -132,5 +135,5 @@ export async function sendAppointmentReminder(params: EmailParams) {
     </p>
   `
 
-  await resend.emails.send({ from: FROM, to, subject: 'Recordatorio: tu turno es mañana – Hospital de Roca', html: baseTemplate(content) })
+  await getResend().emails.send({ from: FROM, to, subject: 'Recordatorio: tu turno es mañana – Hospital Cervantes', html: baseTemplate(content) })
 }
