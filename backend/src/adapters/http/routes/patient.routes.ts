@@ -12,6 +12,6 @@ router.get('/:dni/record', authenticate, authorize('DOCTOR', 'ADMIN'), getPatien
 router.get('/:dni',        authenticate, authorize('DOCTOR', 'ADMIN'), getPatientByDni)
 router.get('/',            authenticate, authorize('DOCTOR', 'ADMIN'), getAllPatients)
 router.post('/',           authenticate, authorize('ADMIN'),            createPatient)
-router.patch('/:dni',      authenticate, authorize('ADMIN'),            updatePatient)
+router.patch('/:dni',      authenticate, authorize('DOCTOR', 'ADMIN'),   updatePatient)
 
 export default router
