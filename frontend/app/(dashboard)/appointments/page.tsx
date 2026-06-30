@@ -67,7 +67,8 @@ export default function MisTurnosPage() {
       <div className="flex flex-col gap-3">
         {appointments.map(appointment => {
           const { day, month, time } = formatDate(appointment.scheduledAt)
-          const canCancel = appointment.status === 'PENDING' || appointment.status === 'CONFIRMED'
+          const isFuture = new Date(appointment.scheduledAt) > new Date()
+          const canCancel = isFuture && (appointment.status === 'PENDING' || appointment.status === 'CONFIRMED')
 
           return (
             <div
